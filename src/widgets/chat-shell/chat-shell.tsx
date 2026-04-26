@@ -18,6 +18,8 @@ import {
 } from '@/features/chat-onboarding/lib/companion-matrix';
 import { usePublicSocket } from '@/features/public-chat/hooks/use-public-socket';
 import { SocketProvider } from '@/features/public-chat/hooks/socket-context';
+import { useSubmitProfile } from '@/features/chat-onboarding/hooks/use-submit-profile';
+import { useSessionStore } from '@/shared/lib/stores/session-store';
 
 export function ChatShell() {
   useBotSequence(INTRO_SEQUENCE);
@@ -28,6 +30,15 @@ export function ChatShell() {
   const matchedId = useOnboardingStore((s) => s.matchedCompanionId);
   const setMatch = useOnboardingStore((s) => s.setMatch);
   const appendMsg = useChatStore((s) => s.appendMsg);
+  const sessionId = useSessionStore((s) => s.sessionId);
+  const submitMutation = useSubmitProfile();
+
+  useEffect(() => {
+    if (step === 3 && sessionId && gender && persona) {
+      submitMutation.mutate({ sessionId, body: { gender, persona } });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, sessionId, gender, persona]);
 
   useEffect(() => {
     if (step === 2 && gender) {
