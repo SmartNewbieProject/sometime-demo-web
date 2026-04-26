@@ -20,3 +20,17 @@ export async function submitProfile(
     body: JSON.stringify(body),
   });
 }
+
+export interface ConvertBody {
+  userId?: string;
+}
+
+export async function convertSession(
+  sessionId: string,
+  body: ConvertBody = {},
+): Promise<{ success: boolean }> {
+  return apiFetch<{ success: boolean }>(`/ai-companion-public/sessions/${sessionId}/convert`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}

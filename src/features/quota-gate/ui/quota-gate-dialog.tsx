@@ -2,6 +2,7 @@
 
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/shared/ui/dialog';
 import { env } from '@/shared/config/env';
+import { handleConversionClick } from '../lib/convert-session';
 
 interface Props {
   open: boolean;
@@ -15,10 +16,6 @@ const BENEFITS = [
 ];
 
 export function QuotaGateDialog({ open, sessionId }: Props) {
-  const deepLink =
-    sessionId && env.NEXT_PUBLIC_DEEP_LINK_URL
-      ? `${env.NEXT_PUBLIC_DEEP_LINK_URL}${sessionId}`
-      : '#';
   const appStore = env.NEXT_PUBLIC_APP_STORE_URL ?? '#';
   const playStore = env.NEXT_PUBLIC_PLAY_STORE_URL ?? '#';
 
@@ -61,12 +58,14 @@ export function QuotaGateDialog({ open, sessionId }: Props) {
           ))}
         </ul>
         <div className="mt-4 flex flex-col gap-2">
-          <a
-            href={deepLink}
-            className="rounded-pill bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white active:scale-95 transition"
+          <button
+            type="button"
+            onClick={() => sessionId && handleConversionClick(sessionId)}
+            disabled={!sessionId}
+            className="rounded-pill bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white active:scale-95 transition disabled:opacity-50"
           >
             앱에서 계속하기
-          </a>
+          </button>
           <div className="flex gap-2">
             <a
               href={appStore}
