@@ -6,6 +6,7 @@ import { OnboardingProgress } from '@/features/chat-onboarding/ui/onboarding-pro
 import { MsgList } from './msg-list';
 import { InputBar } from './input-bar';
 import { SocialBanner } from './social-banner';
+import { QuotaGateDialog } from '@/features/quota-gate/ui/quota-gate-dialog';
 import { useBotSequence } from '@/features/chat-onboarding/hooks/use-bot-sequence';
 import { INTRO_SEQUENCE } from '@/features/chat-onboarding/lib/bot-script';
 import { useOnboardingStore } from '@/shared/lib/stores/onboarding-store';
@@ -34,6 +35,7 @@ export function ChatShell() {
   const sessionId = useSessionStore((s) => s.sessionId);
   const quota = useSessionStore((s) => s.quotaRemaining);
   const showWarn = quota > 0 && quota <= 3;
+  const showGate = quota === 0 && sessionId !== null;
   const submitMutation = useSubmitProfile();
 
   useEffect(() => {
@@ -81,6 +83,7 @@ export function ChatShell() {
         </div>
         {showWarn && <SocialBanner remaining={quota} />}
         <InputBar />
+        <QuotaGateDialog open={showGate} sessionId={sessionId} />
       </div>
     </SocketProvider>
   );
