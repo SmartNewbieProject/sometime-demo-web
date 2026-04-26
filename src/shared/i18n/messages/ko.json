@@ -1,0 +1,57 @@
+{
+  "Hero": {
+    "kicker": "처음 만나는 인연",
+    "title": "같은 학교,\n진짜 인연",
+    "tagline": "AI 썸메이트와 가입 없이 먼저 대화해보세요",
+    "statLabel1": "활동 학생",
+    "statLabel2": "오늘 매칭",
+    "statLabel3": "주간 대화",
+    "cta": "지금 체험하기",
+    "ctaSub": "탭하면 시작돼요",
+    "hint": "스크롤하거나 탭하면 시작"
+  },
+  "Bot": {
+    "intro1": "안녕! 썸타임에 들어와줘서 고마워.",
+    "intro2": "너랑 잘 맞는 사람을 찾아주려면\n2가지만 물어봐도 될까?",
+    "intro3": "먼저, 본인 성별이 어떻게 돼?",
+    "askPersona": "좋아. 어떤 스타일의 사람이 끌려?"
+  },
+  "Gender": {
+    "female": "여자",
+    "male": "남자",
+    "undisclosed": "비공개"
+  },
+  "Persona": {
+    "serious": "진지한",
+    "casual": "캐주얼",
+    "active": "활발한",
+    "emotional": "감성적",
+    "friendly": "친근한"
+  },
+  "Quota": {
+    "remaining": "잔여 {n}턴",
+    "warning": "잔여 {n}턴 — 가입하면 이어갈 수 있어요",
+    "gateTitle": "오늘 대화는 여기까지에요",
+    "gateDescription": "앱에서 이어가면 지금까지 나눈\n대화 그대로 보존돼요",
+    "benefit1Title": "대화 보존",
+    "benefit1Desc": "지금까지 나눈 대화 그대로 이어갈 수 있어요",
+    "benefit2Title": "캠퍼스 메이트 추천",
+    "benefit2Desc": "같은 학교 사람과 자연스럽게 매칭돼요",
+    "benefit3Title": "좋아요 무제한",
+    "benefit3Desc": "마음에 드는 사람에게 마음껏 표현할 수 있어요",
+    "ctaContinue": "앱에서 계속하기",
+    "appStore": "App Store",
+    "playStore": "Google Play"
+  },
+  "Chat": {
+    "placeholder": "메시지를 입력하세요",
+    "placeholderEnded": "체험이 종료되었어요",
+    "placeholderWaiting": "매칭 후 메시지를 보낼 수 있어요",
+    "send": "전송",
+    "title": "SOMETIME",
+    "subtitle": "체험 도우미"
+  },
+  "LiveCounter": {
+    "active": "{n}명 활동 중"
+  }
+}
