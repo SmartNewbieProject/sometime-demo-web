@@ -17,6 +17,9 @@ export function MsgList() {
             }
           >
             {m.content}
+            {m.isStreaming && (
+              <span className="inline-block w-0.5 h-3 ml-0.5 align-middle bg-brand animate-pulse" />
+            )}
           </div>
         </div>
       ))}
