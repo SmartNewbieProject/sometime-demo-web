@@ -5,6 +5,7 @@ import { type DismissTrigger, useHeroDismiss } from '../hooks/use-hero-dismiss';
 import { useSequentialReveal } from '../hooks/use-sequential-reveal';
 import { HeroCta } from './hero-cta';
 import { HeroLine } from './hero-line';
+import { HeroLiveCounter } from './hero-live-counter';
 
 export interface HeroCinemaProps {
   onDismiss: () => void;
@@ -61,8 +62,7 @@ export function HeroCinema({ onDismiss }: HeroCinemaProps) {
       {/* Top bar */}
       <div className="relative z-10 mb-14 flex items-center justify-between pt-9">
         <div className="text-[15px] font-black text-brand tracking-[-0.04em]">SOMETIME</div>
-        {/* HeroLiveCounter mounts here in Task 14 */}
-        <div className="h-4 w-24" />
+        <HeroLiveCounter />
       </div>
 
       {/* Content */}
