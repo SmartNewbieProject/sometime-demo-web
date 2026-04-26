@@ -16,9 +16,12 @@ import {
   COMPANIONS,
   resolveCompanion,
 } from '@/features/chat-onboarding/lib/companion-matrix';
+import { usePublicSocket } from '@/features/public-chat/hooks/use-public-socket';
+import { SocketProvider } from '@/features/public-chat/hooks/socket-context';
 
 export function ChatShell() {
   useBotSequence(INTRO_SEQUENCE);
+  const { send } = usePublicSocket();
   const step = useOnboardingStore((s) => s.step);
   const gender = useOnboardingStore((s) => s.gender);
   const persona = useOnboardingStore((s) => s.persona);
@@ -52,16 +55,18 @@ export function ChatShell() {
     : null;
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-gradient-to-b from-white to-brand-mist">
-      <ChatTopbar />
-      <OnboardingProgress />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <MsgList />
-        {step === 1 && gender === null && <GenderChips />}
-        {step === 2 && persona === null && <PersonaChips />}
-        {matched && <MatchCard companion={matched} />}
+    <SocketProvider value={{ send }}>
+      <div className="fixed inset-0 flex flex-col bg-gradient-to-b from-white to-brand-mist">
+        <ChatTopbar />
+        <OnboardingProgress />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <MsgList />
+          {step === 1 && gender === null && <GenderChips />}
+          {step === 2 && persona === null && <PersonaChips />}
+          {matched && <MatchCard companion={matched} />}
+        </div>
+        <InputBar />
       </div>
-      <InputBar />
-    </div>
+    </SocketProvider>
   );
 }
