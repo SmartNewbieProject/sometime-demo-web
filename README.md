@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sometime Demo Web
 
-## Getting Started
+가입 없이 AI 썸메이트와 대화 체험 가능한 마케팅 데모 웹사이트.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16 App Router · TypeScript strict
+- Tailwind v4 · shadcn/ui
+- TanStack Query v5 · Zustand
+- next-intl · Mixpanel
+- Socket.io-client (`/ai-companion-public` namespace)
+
+## Architecture
+
+FSD (Feature-Sliced Design) 변형:
+
+```
+src/
+  app/                      # Next.js App Router
+  features/
+    hero-cinema/            # 시네마틱 Hero
+    chat-onboarding/        # 성별·페르소나 온보딩
+    public-chat/            # 자유 대화
+    quota-gate/             # Turn 10 게이트
+  shared/
+    ui/                     # shadcn base
+    api/                    # fetch + Zod
+    socket/                 # WebSocket factory
+    analytics/              # Mixpanel
+    config/                 # env validation
+    i18n/                   # next-intl messages
+    lib/                    # stores + query provider
+  widgets/
+    chat-shell/             # ChatTopbar + Progress + MsgList + InputBar
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+cp .env.example .env.local
+# .env.local 편집 후
+pnpm dev    # http://localhost:3001
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+| 명령 | 설명 |
+|---|---|
+| `pnpm dev` | 개발 서버 (port 3001) |
+| `pnpm build` | 프로덕션 빌드 |
+| `pnpm typecheck` | TypeScript 검증 |
 
-To learn more about Next.js, take a look at the following resources:
+## 환경 변수
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| 키 | 설명 |
+|---|---|
+| NEXT_PUBLIC_API_BASE_URL | Backend API base (e.g. https://api.some-in-univ.com) |
+| NEXT_PUBLIC_WS_URL | WebSocket gateway base |
+| NEXT_PUBLIC_COUNTRY | `kr` or `jp` |
+| NEXT_PUBLIC_MIXPANEL_TOKEN | Mixpanel project token (optional) |
+| NEXT_PUBLIC_APP_STORE_URL | App Store fallback URL |
+| NEXT_PUBLIC_PLAY_STORE_URL | Google Play fallback URL |
+| NEXT_PUBLIC_DEEP_LINK_URL | 앱 딥링크 prefix (`sometime://session?id=`) |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Backend 연동
 
-## Deploy on Vercel
+같은 모노 도메인의 NestJS API (`solo-nestjs-api`)에서 다음 엔드포인트를 사용:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `POST /ai-companion-public/sessions` — 익명 세션 시작
+- `GET /ai-companion-public/companions` — 컴패니언 목록
+- `GET /ai-companion-public/stats/landing` — 랜딩 통계
+- `POST /ai-companion-public/sessions/:id/profile` — 온보딩 응답
+- `POST /ai-companion-public/sessions/:id/convert` — 가입 전환 추적
+- WebSocket namespace `/ai-companion-public`
