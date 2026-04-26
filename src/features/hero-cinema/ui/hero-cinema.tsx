@@ -1,6 +1,7 @@
 'use client';
 
-import type { MouseEvent } from 'react';
+import { type MouseEvent, useCallback, useRef, useState } from 'react';
+import { type DismissTrigger, useHeroDismiss } from '../hooks/use-hero-dismiss';
 import { useSequentialReveal } from '../hooks/use-sequential-reveal';
 import { HeroCta } from './hero-cta';
 import { HeroLine } from './hero-line';
@@ -10,23 +11,42 @@ export interface HeroCinemaProps {
 }
 
 const REVEAL_DELAYS = [400, 900, 1500, 2000, 2500, 2800, 3100, 3400, 3900];
+const FADE_DURATION_MS = 700;
 
 export function HeroCinema({ onDismiss }: HeroCinemaProps) {
   const revealed = useSequentialReveal(REVEAL_DELAYS);
+  const [fading, setFading] = useState(false);
+  const dismissedRef = useRef(false);
+
+  const dismiss = useCallback(
+    (trigger: DismissTrigger) => {
+      if (dismissedRef.current) return;
+      dismissedRef.current = true;
+      setFading(true);
+      // Mixpanel integration deferred to Task 30.
+      console.debug('hero_dismissed', { trigger_type: trigger });
+      setTimeout(() => onDismiss(), FADE_DURATION_MS);
+    },
+    [onDismiss],
+  );
+
+  useHeroDismiss(dismiss);
 
   const handleCtaClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    onDismiss();
+    dismiss('cta');
   };
 
   const handleRootClick = () => {
-    onDismiss();
+    dismiss('tap');
   };
 
   return (
     <div
       onClick={handleRootClick}
-      className="fixed inset-0 z-50 flex flex-col cursor-pointer bg-white px-7 pt-12 pb-24 transition-all duration-700 ease-out"
+      className={`fixed inset-0 z-50 flex flex-col cursor-pointer bg-white px-7 pt-12 pb-24 transition-all duration-700 ease-out ${
+        fading ? 'opacity-0 -translate-y-2 pointer-events-none' : 'opacity-100 translate-y-0'
+      }`}
     >
       {/* gradient background overlay */}
       <div
