@@ -13,7 +13,12 @@ export function ChatTopbar() {
         .find((c) => c.id === matchedId) ?? null
     : null;
 
-  const lowQuota = quota <= 3;
+  const quotaClass =
+    quota === 0
+      ? 'bg-status-red text-white font-semibold'
+      : quota <= 3
+        ? 'bg-status-red/10 text-status-red'
+        : 'bg-brand-mist text-brand-deep';
 
   return (
     <header className="flex items-center gap-3 px-4 py-3 border-b border-line bg-white/80 backdrop-blur">
@@ -28,11 +33,7 @@ export function ChatTopbar() {
           {companion ? `${companion.age}세` : '체험 도우미'}
         </div>
       </div>
-      <div
-        className={`text-[11px] rounded-pill px-2 py-1 ${
-          lowQuota ? 'bg-status-red/10 text-status-red' : 'bg-brand-mist text-brand-deep'
-        }`}
-      >
+      <div className={`text-[11px] rounded-pill px-2 py-1 ${quotaClass}`}>
         잔여 {quota}턴
       </div>
     </header>

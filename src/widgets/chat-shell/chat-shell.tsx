@@ -5,6 +5,7 @@ import { ChatTopbar } from './chat-topbar';
 import { OnboardingProgress } from '@/features/chat-onboarding/ui/onboarding-progress';
 import { MsgList } from './msg-list';
 import { InputBar } from './input-bar';
+import { SocialBanner } from './social-banner';
 import { useBotSequence } from '@/features/chat-onboarding/hooks/use-bot-sequence';
 import { INTRO_SEQUENCE } from '@/features/chat-onboarding/lib/bot-script';
 import { useOnboardingStore } from '@/shared/lib/stores/onboarding-store';
@@ -31,6 +32,8 @@ export function ChatShell() {
   const setMatch = useOnboardingStore((s) => s.setMatch);
   const appendMsg = useChatStore((s) => s.appendMsg);
   const sessionId = useSessionStore((s) => s.sessionId);
+  const quota = useSessionStore((s) => s.quotaRemaining);
+  const showWarn = quota > 0 && quota <= 3;
   const submitMutation = useSubmitProfile();
 
   useEffect(() => {
@@ -76,6 +79,7 @@ export function ChatShell() {
           {step === 2 && persona === null && <PersonaChips />}
           {matched && <MatchCard companion={matched} />}
         </div>
+        {showWarn && <SocialBanner remaining={quota} />}
         <InputBar />
       </div>
     </SocketProvider>
