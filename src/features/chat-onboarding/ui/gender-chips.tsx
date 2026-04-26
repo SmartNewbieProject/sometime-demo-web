@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useOnboardingStore, type Gender } from '@/shared/lib/stores/onboarding-store';
 import { useChatStore } from '@/shared/lib/stores/chat-store';
+import { events } from '@/shared/analytics/events';
 
 const OPTIONS: { value: Gender; label: string }[] = [
   { value: 'female', label: '여자' },
@@ -22,6 +23,7 @@ export function GenderChips() {
   const [hidden, setHidden] = useState(false);
 
   const pick = (g: Gender, label: string) => {
+    events.genderSelected(g);
     setGender(g);
     appendMsg({ role: 'out', content: label });
     setTimeout(() => setHidden(true), 200);

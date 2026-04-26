@@ -5,6 +5,7 @@ import { useSocketSend } from '@/features/public-chat/hooks/socket-context';
 import { useChatStore } from '@/shared/lib/stores/chat-store';
 import { useSessionStore } from '@/shared/lib/stores/session-store';
 import { useOnboardingStore } from '@/shared/lib/stores/onboarding-store';
+import { events } from '@/shared/analytics/events';
 
 export function InputBar() {
   const [content, setContent] = useState('');
@@ -19,6 +20,9 @@ export function InputBar() {
     e.preventDefault();
     const trimmed = content.trim();
     if (!trimmed || disabled || !matchedId) return;
+    const outCount = useChatStore.getState().messages.filter((m) => m.role === 'out').length;
+    if (outCount === 0) events.chatStarted();
+    events.messagesSent(outCount + 1);
     appendMsg({ role: 'out', content: trimmed });
     send(trimmed, matchedId);
     setContent('');

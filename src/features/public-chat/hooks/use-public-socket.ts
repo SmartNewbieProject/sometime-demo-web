@@ -4,6 +4,7 @@ import type { Socket } from 'socket.io-client';
 import { createPublicSocket } from '@/shared/socket/public-socket';
 import { useSessionStore } from '@/shared/lib/stores/session-store';
 import { useChatStore } from '@/shared/lib/stores/chat-store';
+import { events } from '@/shared/analytics/events';
 
 export interface PublicChatHandle {
   send: (content: string, companionId: string) => void;
@@ -64,6 +65,7 @@ export function usePublicSocket(): PublicChatHandle {
     );
     socket.on('public:quota:warning', (data: { remaining: number }) => {
       setQuota(data.remaining);
+      events.quotaWarning();
     });
     socket.on('public:quota:exceeded', (data: { remaining: number }) => {
       setQuota(data.remaining);

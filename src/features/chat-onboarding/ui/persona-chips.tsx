@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useOnboardingStore, type Persona } from '@/shared/lib/stores/onboarding-store';
 import { useChatStore } from '@/shared/lib/stores/chat-store';
+import { events } from '@/shared/analytics/events';
 
 const OPTIONS: { value: Persona; label: string; color: string }[] = [
   { value: 'serious', label: '진지한', color: '#7E5BEF' },
@@ -18,6 +19,7 @@ export function PersonaChips() {
   const [hidden, setHidden] = useState(false);
 
   const pick = (p: Persona, label: string) => {
+    events.personaSelected(p);
     setPersona(p);
     appendMsg({ role: 'out', content: label });
     setTimeout(() => setHidden(true), 200);

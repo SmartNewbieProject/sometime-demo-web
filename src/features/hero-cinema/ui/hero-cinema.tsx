@@ -1,6 +1,7 @@
 'use client';
 
-import { type MouseEvent, useCallback, useRef, useState } from 'react';
+import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { events } from '@/shared/analytics/events';
 import { type DismissTrigger, useHeroDismiss } from '../hooks/use-hero-dismiss';
 import { useSequentialReveal } from '../hooks/use-sequential-reveal';
 import { HeroCta } from './hero-cta';
@@ -18,14 +19,22 @@ export function HeroCinema({ onDismiss }: HeroCinemaProps) {
   const revealed = useSequentialReveal(REVEAL_DELAYS);
   const [fading, setFading] = useState(false);
   const dismissedRef = useRef(false);
+  const revealCompleteRef = useRef(false);
+
+  const lastRevealed = revealed[REVEAL_DELAYS.length - 1] ?? false;
+  useEffect(() => {
+    if (lastRevealed && !revealCompleteRef.current) {
+      revealCompleteRef.current = true;
+      events.heroRevealComplete();
+    }
+  }, [lastRevealed]);
 
   const dismiss = useCallback(
     (trigger: DismissTrigger) => {
       if (dismissedRef.current) return;
       dismissedRef.current = true;
       setFading(true);
-      // Mixpanel integration deferred to Task 30.
-      console.debug('hero_dismissed', { trigger_type: trigger });
+      events.heroDismissed(trigger);
       setTimeout(() => onDismiss(), FADE_DURATION_MS);
     },
     [onDismiss],

@@ -22,6 +22,7 @@ import { usePublicSocket } from '@/features/public-chat/hooks/use-public-socket'
 import { SocketProvider } from '@/features/public-chat/hooks/socket-context';
 import { useSubmitProfile } from '@/features/chat-onboarding/hooks/use-submit-profile';
 import { useSessionStore } from '@/shared/lib/stores/session-store';
+import { events } from '@/shared/analytics/events';
 
 export function ChatShell() {
   useBotSequence(INTRO_SEQUENCE);
@@ -37,6 +38,10 @@ export function ChatShell() {
   const showWarn = quota > 0 && quota <= 3;
   const showGate = quota === 0 && sessionId !== null;
   const submitMutation = useSubmitProfile();
+
+  useEffect(() => {
+    events.onboardingStarted();
+  }, []);
 
   useEffect(() => {
     if (step === 3 && sessionId && gender && persona) {
@@ -57,6 +62,7 @@ export function ChatShell() {
       const c = resolveCompanion(gender, persona);
       const t = setTimeout(() => {
         setMatch(c.id);
+        events.matchShown(c.id);
         appendMsg({ role: 'in', content: c.greeting });
       }, 800);
       return () => clearTimeout(t);

@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/shared/ui/dialog';
 import { env } from '@/shared/config/env';
+import { events } from '@/shared/analytics/events';
 import { handleConversionClick } from '../lib/convert-session';
 
 interface Props {
@@ -18,6 +20,10 @@ const BENEFITS = [
 export function QuotaGateDialog({ open, sessionId }: Props) {
   const appStore = env.NEXT_PUBLIC_APP_STORE_URL ?? '#';
   const playStore = env.NEXT_PUBLIC_PLAY_STORE_URL ?? '#';
+
+  useEffect(() => {
+    if (open) events.quotaExceeded();
+  }, [open]);
 
   return (
     <Dialog
@@ -60,7 +66,11 @@ export function QuotaGateDialog({ open, sessionId }: Props) {
         <div className="mt-4 flex flex-col gap-2">
           <button
             type="button"
-            onClick={() => sessionId && handleConversionClick(sessionId)}
+            onClick={() => {
+              if (!sessionId) return;
+              events.signupIntent();
+              handleConversionClick(sessionId);
+            }}
             disabled={!sessionId}
             className="rounded-pill bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white active:scale-95 transition disabled:opacity-50"
           >
