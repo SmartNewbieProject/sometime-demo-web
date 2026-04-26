@@ -1,6 +1,7 @@
 'use client';
 
 import type { MouseEvent } from 'react';
+import { useSequentialReveal } from '../hooks/use-sequential-reveal';
 import { HeroCta } from './hero-cta';
 import { HeroLine } from './hero-line';
 
@@ -8,9 +9,10 @@ export interface HeroCinemaProps {
   onDismiss: () => void;
 }
 
+const REVEAL_DELAYS = [400, 900, 1500, 2000, 2500, 2800, 3100, 3400, 3900];
+
 export function HeroCinema({ onDismiss }: HeroCinemaProps) {
-  // Task 12 will replace this with useSequentialReveal.
-  const revealed = [true, true, true, true, true, true, true, true, true];
+  const revealed = useSequentialReveal(REVEAL_DELAYS);
 
   const handleCtaClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
